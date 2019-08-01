@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.ishare.model.Model;
 import com.example.ishare.model.Post;
 
 import java.util.LinkedList;
@@ -44,13 +45,24 @@ public class FeedFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
 
-        for (int i =0; i<5; i++)
-        {
-            mData.add(new Post("id", "Post number " + (i+1), "zamir", "image", 12345, 0));
-        }
+//        for (int i =0; i<5; i++)
+//        {
+//            mData.add(new Post("id", "Post number " + (i+1), "zamir", "image", 12345, 0));
+//        }
+
+
 
         adapter = new FeedAdapter(mData);
         mRecyclerView.setAdapter(adapter);
+
+        Model.instance.getAllPosts(new Model.GetAllPostsListener() {
+            @Override
+            public void onComplete(List<Post> data) {
+                mData = data;
+                adapter.mData = data;
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         return view;
     }
