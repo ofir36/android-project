@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.ishare.model.Model;
 import com.example.ishare.model.Post;
 import com.example.ishare.model.PostAsyncDao;
 
@@ -57,8 +58,12 @@ public class NewPostFragment extends Fragment {
             public void onClick(View v) {
                 String id = UUID.randomUUID().toString();
                 Post post = new Post(id, postTv.getText().toString(), "ofir", "image", 1234, 0);
-                PostAsyncDao.insertPosts(post);
-                Navigation.findNavController(getView()).navigateUp();
+                Model.instance.addPost(post, new Model.AddPostListener() {
+                    @Override
+                    public void onComplete(boolean success) {
+                        Navigation.findNavController(getView()).navigateUp();
+                    }
+                });
             }
         });
 
