@@ -3,12 +3,18 @@ package com.example.ishare;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,8 +35,16 @@ public class FeedFragment extends Fragment {
     FeedAdapter adapter;
     List<Post> mData = new LinkedList<>();
 
+    private FeedViewModel viewModel;
+
     public FeedFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -45,26 +59,29 @@ public class FeedFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
 
-//        for (int i =0; i<5; i++)
-//        {
-//            mData.add(new Post("id", "Post number " + (i+1), "zamir", "image", 12345, 0));
-//        }
-
-
-
         adapter = new FeedAdapter(mData);
         mRecyclerView.setAdapter(adapter);
-
-        Model.instance.getAllPosts(new Model.GetAllPostsListener() {
-            @Override
-            public void onComplete(List<Post> data) {
-                mData = data;
-                adapter.mData = data;
-                adapter.notifyDataSetChanged();
-            }
-        });
 
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel = ViewModelProviders.of(this).get(FeedViewModel.class);
+        viewModel.getData().observe(this, new Observer<List<Post>>() {
+            @Override
+            public void onChanged(List<Post> posts) {
+                mData = posts;
+                adapter.mData = posts;
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.feed_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 }
