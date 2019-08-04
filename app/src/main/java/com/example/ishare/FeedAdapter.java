@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ishare.model.Model;
 import com.example.ishare.model.Post;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder
         holder.postTv.setText(post.text);
         holder.dateTv.setText(Double.toString(post.lastUpdate));
         holder.userName.setText(post.userId);
+        Model.instance.getImage(post.image, holder.postImage);
     }
 
     @Override

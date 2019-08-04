@@ -1,9 +1,12 @@
 package com.example.ishare.model;
 
 import android.graphics.Bitmap;
+import android.widget.ImageView;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -16,6 +19,10 @@ public class Model {
     private Model() {
         modelSql = new ModelSql();
         modelFirebase = new ModelFirebase();
+    }
+
+    public String getUserId() {
+        return "ofir";
     }
 
     public interface GetAllPostsListener{
@@ -57,5 +64,8 @@ public class Model {
     }
     public void saveImage(Bitmap imageBitmap, SaveImageListener listener) {
         modelFirebase.saveImage(imageBitmap, listener);
+    }
+    public void getImage(String url, ImageView imageView) {
+        Picasso.get().load(url).into(imageView);
     }
 }

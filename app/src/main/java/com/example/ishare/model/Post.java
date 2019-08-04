@@ -80,6 +80,11 @@ public class Post {
         isDeleted = _isDeleted;
     }
 
+    public Post(String _id, String _text, String _userId, String _image)
+    {
+        this(_id, _text, _userId, _image, 0, 0);
+    }
+
 
 //    var date:Date {
 //        get {
