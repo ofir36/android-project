@@ -13,7 +13,7 @@ import java.util.List;
 
 @Dao
 interface PostDao {
-    @Query("select * from Post")
+    @Query("select * from Post order by lastUpdate desc")
     List<Post> getAll();
 
 //    @Query("select * from Post")

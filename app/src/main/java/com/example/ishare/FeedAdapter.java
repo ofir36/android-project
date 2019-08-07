@@ -35,9 +35,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post= mData.get(position);
         holder.postTv.setText(post.text);
-        holder.dateTv.setText(Double.toString(post.lastUpdate));
+        holder.dateTv.setText(post.lastUpdate.toString());
         holder.userName.setText(post.userId);
-        Model.instance.getImage(post.image, holder.postImage);
+        if (post.image != "")
+            Model.instance.getImage(post.image, holder.postImage);
     }
 
     @Override

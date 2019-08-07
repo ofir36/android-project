@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 
 public class Model {
@@ -33,19 +34,35 @@ public class Model {
         final MutableLiveData<List<Post>> data = new
                 MutableLiveData<>();
 
-        modelFirebase.getAllPosts(new GetAllPostsListener() {
+        //1. read local students last update date
+        getLastUpdate("posts", new GetLastUpdateListener() {
             @Override
-            public void onComplete(List<Post> posts) {
-                data.setValue(posts);
+            public void onComplete(Date lastUpdate) {
+                //2. get updates from firebase and observe
+                modelFirebase.getAllPosts(lastUpdate, new GetAllPostsListener() {
+                    @Override
+                    public void onComplete(List<Post> posts) {
+                        if (posts.size() > 0) {
+                            //3. write new records to the local DB
+                            PostAsyncDao.insertPosts(posts.toArray(new Post[posts.size()]));
+                            Date lastUpdate = posts.get(0).lastUpdate;
+
+                            //4. update the local posts last update date
+                            setLastUpdate("posts", lastUpdate);
+                        }
+
+                        //5. get the full data
+                        PostAsyncDao.getAllPosts(new GetAllPostsListener() {
+                            @Override
+                            public void onComplete(List<Post> posts) {
+                                //6. notify observers with full data
+                                data.setValue(posts);
+                            }
+                        });
+                    }
+                });
             }
         });
-
-//        PostAsyncDao.getAllPosts(new GetAllPostsListener() {
-//            @Override
-//            public void onComplete(List<Post> posts) {
-//                data.setValue(posts);
-//            }
-//        });
 
         return data;
     }
@@ -54,8 +71,20 @@ public class Model {
         void onComplete(boolean success);
     }
     public void addPost(Post post, AddPostListener listener) {
-        //TODO: fix async impl
         modelFirebase.addPost(post, listener);
+    }
+
+    public interface GetLastUpdateListener {
+        void onComplete(Date lastUpdate);
+    }
+    public void getLastUpdate(String tableName, GetLastUpdateListener listener)
+    {
+        LastUpdateAsyncDao.getLastUpdate(tableName, listener);
+    }
+
+    public void setLastUpdate(String tableName, Date date)
+    {
+        LastUpdateAsyncDao.setLastUpdate(new LastUpdate(tableName, date));
     }
 
 

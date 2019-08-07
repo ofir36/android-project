@@ -82,9 +82,9 @@ public class NewPostFragment extends Fragment {
     }
 
     private void onShare() {
-        if (post == null && imageBitmap == null && postTv.getText() == "")
+        if (post == null && imageBitmap == null && postTv.getText().toString().isEmpty())
         {
-            Snackbar.make(getView(), "Can't share an empty post", 5);
+            Snackbar.make(getView(), "Can't share an empty post.", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
@@ -128,7 +128,6 @@ public class NewPostFragment extends Fragment {
     }
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    final static int RESAULT_SUCCESS = 0;
     static final int GALLERY_REQUEST_CODE = 100;
 
     private void dispatchTakePictureIntent() {
@@ -151,11 +150,11 @@ public class NewPostFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            imageBitmap = (Bitmap) extras.get("data");
-            imageView.setImageBitmap(imageBitmap);
-        }
+//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+//            Bundle extras = data.getExtras();
+//            imageBitmap = (Bitmap) extras.get("data");
+//            imageView.setImageBitmap(imageBitmap);
+//        }
 
         if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK) {
             //data.getData return the content URI for the selected Image

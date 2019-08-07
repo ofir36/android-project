@@ -9,11 +9,14 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -37,8 +40,9 @@ public class ModelFirebase {
         db.setFirestoreSettings(settings);
     }
 
-    public void getAllPosts(final Model.GetAllPostsListener listener) {
-        db.collection("posts").addSnapshotListener(new EventListener<QuerySnapshot>() {
+    public void getAllPosts(Date from, final Model.GetAllPostsListener listener) {
+        db.collection("posts").whereGreaterThan("lastUpdate", new Timestamp(from)).orderBy("lastUpdate", Query.Direction.DESCENDING)
+            .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 LinkedList<Post> data = new LinkedList<>();
@@ -48,7 +52,8 @@ public class ModelFirebase {
                 }
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     Post post = doc.toObject(Post.class);
-                    data.add(post);
+                    if (post.lastUpdate != null)
+                        data.add(post);
                 }
                 listener.onComplete(data);
             }
@@ -56,6 +61,7 @@ public class ModelFirebase {
     }
 
     public void addPost(Post post, final Model.AddPostListener listener) {
+//        post.lastUpdate = Double.parseDouble(FieldValue.serverTimestamp().toString());
         db.collection("posts").document(post.id)
                 .set(post).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

@@ -2,7 +2,10 @@ package com.example.ishare.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
@@ -15,7 +18,8 @@ public class Post {
     public String userId;
     public String image;
     public int isDeleted;
-    public double lastUpdate;
+    @ServerTimestamp
+    public Date lastUpdate;
 
     public void setId(@NonNull String id) {
         this.id = id;
@@ -37,7 +41,7 @@ public class Post {
         this.isDeleted = isDeleted;
     }
 
-    public void setLastUpdate(double lastUpdate) {
+    public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -62,7 +66,7 @@ public class Post {
         return isDeleted;
     }
 
-    public double getLastUpdate() {
+    public Date getLastUpdate() {
         return lastUpdate;
     }
 
@@ -70,7 +74,7 @@ public class Post {
 
     }
 
-    public Post(String _id, String _text, String _userId, String _image, double _lastUpdate, int _isDeleted)
+    public Post(String _id, String _text, String _userId, String _image, Date _lastUpdate, int _isDeleted)
     {
         id = _id;
         text = _text;
@@ -82,7 +86,7 @@ public class Post {
 
     public Post(String _id, String _text, String _userId, String _image)
     {
-        this(_id, _text, _userId, _image, 0, 0);
+        this(_id, _text, _userId, _image, null, 0);
     }
 
 
