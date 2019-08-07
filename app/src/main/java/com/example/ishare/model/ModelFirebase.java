@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -36,6 +37,9 @@ public class ModelFirebase {
     FirebaseFirestore db;
     FirebaseAuth auth;
 
+    ListenerRegistration userListener;
+    ListenerRegistration postsListener;
+
     public ModelFirebase() {
         db = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
@@ -45,7 +49,7 @@ public class ModelFirebase {
     }
 
     public void getAllPosts(Date from, final Model.GetAllPostsListener listener) {
-        db.collection("posts").whereGreaterThan("lastUpdate", new Timestamp(from)).orderBy("lastUpdate", Query.Direction.DESCENDING)
+        postsListener = db.collection("posts").whereGreaterThan("lastUpdate", new Timestamp(from)).orderBy("lastUpdate", Query.Direction.DESCENDING)
             .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -121,8 +125,24 @@ public class ModelFirebase {
         }
     }
 
-    // TODO : implement
+    // TODO : use
     private void removeObservers() {
+        userListener.remove();
+        postsListener.remove();
+    }
+
+    public void getUserDetailsAndObserve(String userId, final Model.GetUserDetailsListener listener) {
+        userListener = db.collection("users").document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                User user = documentSnapshot.toObject(User.class);
+                listener.onComplete(user);
+            }
+        });
+    }
+
+    public String getUserId() {
+        return auth.getUid();
     }
 
     interface GetPostListener {

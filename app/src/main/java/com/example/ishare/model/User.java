@@ -19,19 +19,19 @@ public class User {
     @ServerTimestamp
     public Date lastUpdate;
 
-    public User(@NonNull String id, String name, String image, String about, Date lastUpdate) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.about = about;
-        this.lastUpdate = lastUpdate;
-    }
-
-    public User(@NonNull String id, String name) {
-        this(id, name, "", "", null);
-    }
-
     public User() {
+    }
+
+    public User(@NonNull String _id, String _name) {
+        this(_id, _name, "", "", null);
+    }
+
+    public User(@NonNull String _id, String _name, String _image, String _about, Date _lastUpdate) {
+        this.id = _id;
+        this.name = _name;
+        this.image = _image;
+        this.about = _about;
+        this.lastUpdate = _lastUpdate;
     }
 
     @NonNull

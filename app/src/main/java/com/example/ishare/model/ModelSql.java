@@ -16,11 +16,12 @@ import com.example.ishare.MyApplication;
 import java.util.LinkedList;
 import java.util.List;
 
-@Database(entities = {Post.class, LastUpdate.class}, version = 3, exportSchema = false)
+@Database(entities = {Post.class, LastUpdate.class, User.class}, version = 4, exportSchema = false)
 @TypeConverters({Converters.class})
 abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract PostDao postDao();
     public abstract LastUpdateDao lastUpdateDao();
+    public abstract UserDao userDao();
 }
 
 public class ModelSql {

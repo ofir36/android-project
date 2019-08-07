@@ -23,7 +23,7 @@ public class Model {
     }
 
     public String getUserId() {
-        return "ofir";
+        return modelFirebase.getUserId();
     }
 
     public interface GetAllPostsListener{
@@ -109,6 +109,25 @@ public class Model {
     public interface SignInListener {
         void OnComplete(boolean success);
     }
+
+    public interface GetUserDetailsListener {
+        void onComplete(User user);
+    }
+    public void getUserDetails(final GetUserDetailsListener listener) {
+        modelFirebase.getUserDetailsAndObserve(getUserId(), new GetUserDetailsListener() {
+            @Override
+            public void onComplete(final User user) {
+                UserAsyncDao.insertUser(user, new UserAsyncDao.InsertUserListener() {
+                    @Override
+                    public void onComplete() {
+                        listener.onComplete(user);
+                    }
+                });
+            }
+        });
+    }
+
+
     public void signIn(String email, String password, SignInListener listener)
     {
         modelFirebase.signIn(email, password, listener);
