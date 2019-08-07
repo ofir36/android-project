@@ -34,6 +34,8 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("Register");
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);
 
@@ -46,6 +48,8 @@ public class RegisterFragment extends Fragment {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utility.hideKeyboard(getActivity());
+
                 if (emailTv.getText().toString().isEmpty() || userNameTv.getText().toString().isEmpty() ||
                     passwordTv.getText().toString().isEmpty() || vPasswordTv.getText().toString().isEmpty())
                 {

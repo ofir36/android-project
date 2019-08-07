@@ -96,6 +96,19 @@ public class ModelFirebase {
         db.collection("users").document(user.id).set(user);
     }
 
+    public void signIn(String email, String password, final Model.SignInListener listener) {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                listener.OnComplete(task.isSuccessful());
+            }
+        });
+    }
+
+    public boolean isSignedIn() {
+        return (auth.getCurrentUser() != null);
+    }
+
     interface GetPostListener {
         void onComplete(Post post);
     }

@@ -82,6 +82,7 @@ public class NewPostFragment extends Fragment {
     }
 
     private void onShare() {
+        Utility.hideKeyboard(getActivity());
         if (post == null && imageBitmap == null && postTv.getText().toString().isEmpty())
         {
             Utility.showAlert("Can't share an empty post.", getView());

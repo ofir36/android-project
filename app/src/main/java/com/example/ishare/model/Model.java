@@ -105,4 +105,16 @@ public class Model {
     {
         modelFirebase.createUser(email, password, name, listener);
     }
+
+    public interface SignInListener {
+        void OnComplete(boolean success);
+    }
+    public void signIn(String email, String password, SignInListener listener)
+    {
+        modelFirebase.signIn(email, password, listener);
+    }
+
+    public boolean isSignedIn() {
+        return modelFirebase.isSignedIn();
+    }
 }
