@@ -114,6 +114,11 @@ public class Model {
         modelFirebase.signIn(email, password, listener);
     }
 
+    public boolean signOut()
+    {
+        return modelFirebase.signOut();
+    }
+
     public boolean isSignedIn() {
         return modelFirebase.isSignedIn();
     }

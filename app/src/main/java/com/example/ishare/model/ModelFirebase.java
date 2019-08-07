@@ -109,6 +109,22 @@ public class ModelFirebase {
         return (auth.getCurrentUser() != null);
     }
 
+    public boolean signOut() {
+        try {
+            auth.signOut();
+            removeObservers();
+            return true;
+        }
+        catch (Error error)
+        {
+            return false;
+        }
+    }
+
+    // TODO : implement
+    private void removeObservers() {
+    }
+
     interface GetPostListener {
         void onComplete(Post post);
     }
