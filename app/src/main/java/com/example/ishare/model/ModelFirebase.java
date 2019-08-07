@@ -10,6 +10,8 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -32,12 +34,14 @@ import javax.annotation.Nullable;
 
 public class ModelFirebase {
     FirebaseFirestore db;
+    FirebaseAuth auth;
 
     public ModelFirebase() {
         db = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(false).build();
         db.setFirestoreSettings(settings);
+        auth = FirebaseAuth.getInstance();
     }
 
     public void getAllPosts(Date from, final Model.GetAllPostsListener listener) {
@@ -69,6 +73,27 @@ public class ModelFirebase {
                 listener.onComplete(task.isSuccessful());
             }
         });
+    }
+
+    public void createUser(String email, String password, final String name, final Model.CreateUserListener listener) {
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    User user = new User(task.getResult().getUser().getUid(), name);
+                    updateUser(user);
+                    listener.onComplete(true);
+                }
+                else
+                {
+                    listener.onComplete(false);
+                }
+            }
+        });
+    }
+
+    public void updateUser(User user) {
+        db.collection("users").document(user.id).set(user);
     }
 
     interface GetPostListener {

@@ -97,4 +97,12 @@ public class Model {
     public void getImage(String url, ImageView imageView) {
         Picasso.get().load(url).into(imageView);
     }
+
+    public interface CreateUserListener {
+        void onComplete(boolean success);
+    }
+    public void createUser(String email, String password, String name, CreateUserListener listener)
+    {
+        modelFirebase.createUser(email, password, name, listener);
+    }
 }

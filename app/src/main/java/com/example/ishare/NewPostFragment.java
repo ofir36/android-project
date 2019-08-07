@@ -84,7 +84,7 @@ public class NewPostFragment extends Fragment {
     private void onShare() {
         if (post == null && imageBitmap == null && postTv.getText().toString().isEmpty())
         {
-            Snackbar.make(getView(), "Can't share an empty post.", Snackbar.LENGTH_SHORT).show();
+            Utility.showAlert("Can't share an empty post.", getView());
             return;
         }
 
