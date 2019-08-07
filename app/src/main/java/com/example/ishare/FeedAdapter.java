@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ishare.model.Model;
 import com.example.ishare.model.Post;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Vector;
 
@@ -35,7 +36,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post= mData.get(position);
         holder.postTv.setText(post.text);
-        holder.dateTv.setText(post.lastUpdate.toString());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        holder.dateTv.setText(formatter.format(post.lastUpdate));
         holder.userName.setText(post.userId);
         if (post.image != "")
             Model.instance.getImage(post.image, holder.postImage);

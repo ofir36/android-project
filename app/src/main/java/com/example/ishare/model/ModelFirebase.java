@@ -49,6 +49,9 @@ public class ModelFirebase {
     }
 
     public void getAllPosts(Date from, final Model.GetAllPostsListener listener) {
+        if (from == null)
+            from = new Timestamp(0, 0).toDate();
+
         postsListener = db.collection("posts").whereGreaterThan("lastUpdate", new Timestamp(from)).orderBy("lastUpdate", Query.Direction.DESCENDING)
             .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override

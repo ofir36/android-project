@@ -32,10 +32,6 @@ public class LastUpdateAsyncDao {
             protected Date doInBackground(String... strings) {
                 Date lastUpdate = ModelSql.db.lastUpdateDao().get(tableName);
 
-                if (lastUpdate == null) {
-                    lastUpdate = new Date(1970,0,0);
-                }
-
                 return lastUpdate;
             }
 
