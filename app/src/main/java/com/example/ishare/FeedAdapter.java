@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ishare.model.Model;
 import com.example.ishare.model.Post;
+import com.example.ishare.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -33,7 +34,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final PostViewHolder holder, int position) {
         Post post= mData.get(position);
         holder.postTv.setText(post.text);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -41,6 +42,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder
         holder.userName.setText(post.userId);
         if (post.image != "")
             Model.instance.getImage(post.image, holder.postImage);
+
+        Model.instance.getUserDetails(post.userId, new Model.GetUserDetailsListener() {
+            @Override
+            public void onComplete(User user) {
+                holder.userName.setText(user.name);
+                Model.instance.getImage(user.image, holder.avatar);
+            }
+        });
     }
 
     @Override

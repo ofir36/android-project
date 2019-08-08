@@ -148,6 +148,16 @@ public class ModelFirebase {
         return auth.getUid();
     }
 
+    public void getUserDetails(String userId, final Model.GetUserDetailsListener listener) {
+        db.collection("users").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                User user = task.getResult().toObject(User.class);
+                listener.onComplete(user);
+            }
+        });
+    }
+
     interface GetPostListener {
         void onComplete(Post post);
     }

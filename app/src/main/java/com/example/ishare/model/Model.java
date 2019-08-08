@@ -131,6 +131,21 @@ public class Model {
         });
     }
 
+    public void getUserDetails(String userId, final GetUserDetailsListener listener)
+    {
+        modelFirebase.getUserDetails(userId, new GetUserDetailsListener() {
+            @Override
+            public void onComplete(final User user) {
+                UserAsyncDao.insertUser(user, new UserAsyncDao.InsertUserListener() {
+                    @Override
+                    public void onComplete() {
+                        listener.onComplete(user);
+                    }
+                });
+            }
+        });
+    }
+
 
     public void signIn(String email, String password, SignInListener listener)
     {
