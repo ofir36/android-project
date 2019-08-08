@@ -26,6 +26,10 @@ public class Model {
         return modelFirebase.getUserId();
     }
 
+    public void updateUser(User user) {
+        modelFirebase.updateUser(user);
+    }
+
     public interface GetAllPostsListener{
         void onComplete(List<Post> data);
     }

@@ -31,5 +31,8 @@
         android:id="@+id/editProfileFragment"
         android:name="com.example.ishare.EditProfileFragment"
         android:label="fragment_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" />
+        tools:layout="@layout/fragment_edit_profile" >
+        <argument android:name="user"
+            app:argType="com.example.ishare.model.User" />
+    </fragment>
 </navigation>

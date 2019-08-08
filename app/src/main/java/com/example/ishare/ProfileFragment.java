@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -96,6 +97,12 @@ public class ProfileFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.profile_menu_logout:
                 logout();
+                return true;
+
+            case R.id.profile_menu_edit:
+                ProfileFragmentDirections.ActionProfileFragmentToEditProfileFragment action =
+                        ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(user);
+                Navigation.findNavController(getView()).navigate(action);
                 return true;
         }
 
