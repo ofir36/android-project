@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/feed_menu_add"
-        android:icon="@android:drawable/ic_input_add"
+        android:icon="@drawable/add2"
         android:title="Item"
         app:showAsAction="always" />
 </menu>
