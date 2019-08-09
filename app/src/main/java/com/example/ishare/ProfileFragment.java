@@ -11,6 +11,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +27,7 @@ import com.example.ishare.model.Model;
 import com.example.ishare.model.Post;
 import com.example.ishare.model.User;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -39,6 +42,12 @@ public class ProfileFragment extends Fragment {
     TextView aboutTv;
 
     ProfileViewModel viewModel;
+
+    RecyclerView mRecyclerView;
+    RecyclerView.LayoutManager layoutManager;
+    ProfilePostsAdapter adapter;
+
+    List<Post> mData = new LinkedList<>();
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -62,6 +71,20 @@ public class ProfileFragment extends Fragment {
         userNameTv = view.findViewById(R.id.profile_name_tv);
         aboutTv = view.findViewById(R.id.profile_about_tv);
 
+        mRecyclerView = view.findViewById(R.id.profile_posts_rv);
+        mRecyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        adapter = new ProfilePostsAdapter(mData, new ProfilePostsAdapter.PostClickListener() {
+            @Override
+            public void onPostClick(Post post) {
+
+            }
+        });
+        mRecyclerView.setAdapter(adapter);
+
         return view;
     }
 
@@ -82,6 +105,14 @@ public class ProfileFragment extends Fragment {
                 {
                     Model.instance.getImage(user.image, userImageView);
                 }
+            }
+        });
+        viewModel.getUserPosts().observe(this, new Observer<List<Post>>() {
+            @Override
+            public void onChanged(List<Post> posts) {
+                mData = posts;
+                adapter.mData = posts;
+                adapter.notifyDataSetChanged();
             }
         });
     }

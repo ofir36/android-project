@@ -30,6 +30,10 @@ public class Model {
         modelFirebase.updateUser(user);
     }
 
+    public void getUserPosts(GetAllPostsListener listener) {
+        modelFirebase.getUserPosts(listener);
+    }
+
     public interface GetAllPostsListener{
         void onComplete(List<Post> data);
     }

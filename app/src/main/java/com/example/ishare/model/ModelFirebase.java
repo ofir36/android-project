@@ -39,6 +39,7 @@ public class ModelFirebase {
 
     ListenerRegistration userListener;
     ListenerRegistration postsListener;
+    ListenerRegistration userPostsListener;
 
     public ModelFirebase() {
         db = FirebaseFirestore.getInstance();
@@ -69,6 +70,27 @@ public class ModelFirebase {
                 listener.onComplete(data);
             }
         });
+    }
+
+    public void getUserPosts(final Model.GetAllPostsListener listener)
+    {
+        userPostsListener = db.collection("posts").whereEqualTo("userId", getUserId()).orderBy("lastUpdate", Query.Direction.DESCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        LinkedList<Post> data = new LinkedList<>();
+                        if (e != null) {
+                            listener.onComplete(data);
+                            return;
+                        }
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Post post = doc.toObject(Post.class);
+                            if (post.lastUpdate != null)
+                                data.add(post);
+                        }
+                        listener.onComplete(data);
+                    }
+                });
     }
 
     public void addPost(Post post, final Model.AddPostListener listener) {
@@ -128,10 +150,11 @@ public class ModelFirebase {
         }
     }
 
-    // TODO : use
+    // TODO: use
     private void removeObservers() {
         userListener.remove();
         postsListener.remove();
+        userPostsListener.remove();
     }
 
     public void getUserDetailsAndObserve(String userId, final Model.GetUserDetailsListener listener) {

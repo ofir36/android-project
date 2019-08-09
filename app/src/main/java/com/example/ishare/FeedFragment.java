@@ -63,7 +63,12 @@ public class FeedFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new FeedAdapter(mData);
+        adapter = new FeedAdapter(mData, new FeedAdapter.PostClickListener() {
+            @Override
+            public void onPostClick(Post post) {
+
+            }
+        });
         mRecyclerView.setAdapter(adapter);
 
         return view;
