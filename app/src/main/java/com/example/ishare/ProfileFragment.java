@@ -80,7 +80,9 @@ public class ProfileFragment extends Fragment {
         adapter = new ProfilePostsAdapter(mData, new ProfilePostsAdapter.PostClickListener() {
             @Override
             public void onPostClick(Post post) {
-
+                ProfileFragmentDirections.ActionProfileFragmentToNewPostFragment action =
+                        ProfileFragmentDirections.actionProfileFragmentToNewPostFragment(post);
+                Navigation.findNavController(getView()).navigate(action);
             }
         });
         mRecyclerView.setAdapter(adapter);

@@ -57,6 +57,8 @@ public class NewPostFragment extends Fragment {
                              Bundle savedInstanceState) {
         getActivity().setTitle("New Post");
 
+        post = NewPostFragmentArgs.fromBundle(getArguments()).getPost();
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_post, container, false);
 
@@ -77,6 +79,16 @@ public class NewPostFragment extends Fragment {
                 onShare();
             }
         });
+
+        if (post != null){
+            postTv.setText(post.text);
+            shareBtn.setText("Save");
+            getActivity().setTitle("Edit Post");
+
+            if (!post.image .isEmpty()){
+                Model.instance.getImage(post.image, imageView);
+            }
+        }
 
         return view;
     }

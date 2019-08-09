@@ -99,7 +99,9 @@ public class FeedFragment extends Fragment {
         switch (item.getItemId())
         {
             case R.id.feed_menu_add:
-                Navigation.findNavController(getView()).navigate(R.id.action_feedFragment_to_newPostFragment);
+                FeedFragmentDirections.ActionFeedFragmentToNewPostFragment action =
+                        FeedFragmentDirections.actionFeedFragmentToNewPostFragment(null);
+                Navigation.findNavController(getView()).navigate(action);
                 return true;
         }
 

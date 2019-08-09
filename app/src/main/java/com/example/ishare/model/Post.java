@@ -7,10 +7,11 @@ import androidx.room.PrimaryKey;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-public class Post {
+public class Post implements Serializable {
     @PrimaryKey
     @NonNull
     public String id;
