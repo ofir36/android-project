@@ -46,8 +46,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder
         holder.bind(post, listener);
     }
 
-
-
     @Override
     public int getItemCount() {
         return mData.size();
@@ -80,13 +78,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.PostViewHolder
             if (post.image != "")
                 Model.instance.getImage(post.image, postImage);
 
+            userName.setTag(post.id);
             Model.instance.getUserDetails(post.userId, new Model.GetUserDetailsListener() {
                 @Override
                 public void onComplete(User user) {
-                    userName.setText(user.name);
+                    if (userName.getTag() == post.id) {
+                        userName.setText(user.name);
 
-                    if (!user.image.isEmpty())
-                        Model.instance.getImage(user.image, avatar);
+                        if (!user.image.isEmpty())
+                            Model.instance.getImage(user.image, avatar);
+                    }
                 }
             });
 
