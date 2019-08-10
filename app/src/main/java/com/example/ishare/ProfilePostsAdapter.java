@@ -1,5 +1,6 @@
 package com.example.ishare;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,20 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<ProfilePostsAdapte
     public void onBindViewHolder(@NonNull final ProfilePostsAdapter.PostViewHolder holder, int position) {
         Post post = mData.get(position);
         holder.bind(post, listener);
+    }
+
+    public void deleteItem(final int position, final View view) {
+        Post post = mData.get(position);
+        Utility.showSpinner(view.getContext());
+        Model.instance.deletePost(post, new Model.DeletePostListener() {
+            @Override
+            public void onComplete(boolean success) {
+                Utility.hideSpinner();
+                if (!success) {
+                    Utility.showAlert("Error deleting post, please try again.", view);
+                }
+            }
+        });
     }
 
 

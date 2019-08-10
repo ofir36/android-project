@@ -74,7 +74,10 @@ public class ModelFirebase {
 
     public void getUserPosts(final Model.GetAllPostsListener listener)
     {
-        userPostsListener = db.collection("posts").whereEqualTo("userId", getUserId()).orderBy("lastUpdate", Query.Direction.DESCENDING)
+        userPostsListener = db.collection("posts")
+                .whereEqualTo("userId", getUserId())
+                .whereEqualTo("isDeleted", 0)
+                .orderBy("lastUpdate", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -94,7 +97,7 @@ public class ModelFirebase {
     }
 
     public void addPost(Post post, final Model.AddPostListener listener) {
-//        post.lastUpdate = Double.parseDouble(FieldValue.serverTimestamp().toString());
+        post.lastUpdate = null;
         db.collection("posts").document(post.id)
                 .set(post).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -177,6 +180,16 @@ public class ModelFirebase {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 User user = task.getResult().toObject(User.class);
                 listener.onComplete(user);
+            }
+        });
+    }
+
+    public void deletePost(Post post, final Model.DeletePostListener listener) {
+        post.isDeleted = 1;
+        addPost(post, new Model.AddPostListener() {
+            @Override
+            public void onComplete(boolean success) {
+                listener.onComplete(success);
             }
         });
     }

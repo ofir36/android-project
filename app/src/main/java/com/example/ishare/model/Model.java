@@ -34,6 +34,13 @@ public class Model {
         modelFirebase.getUserPosts(listener);
     }
 
+    public interface DeletePostListener {
+        void onComplete(boolean success);
+    }
+    public void deletePost(Post post, DeletePostListener listener) {
+        modelFirebase.deletePost(post, listener);
+    }
+
     public interface GetAllPostsListener{
         void onComplete(List<Post> data);
     }
