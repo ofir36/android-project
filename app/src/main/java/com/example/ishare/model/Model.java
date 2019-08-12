@@ -22,24 +22,75 @@ public class Model {
         modelFirebase = new ModelFirebase();
     }
 
-    public String getUserId() {
-        return modelFirebase.getUserId();
+    // Users
+
+    public interface CreateUserListener {
+        void onComplete(boolean success);
+    }
+    public void createUser(String email, String password, String name, CreateUserListener listener)
+    {
+        modelFirebase.createUser(email, password, name, listener);
     }
 
     public void updateUser(User user) {
         modelFirebase.updateUser(user);
     }
 
-    public void getUserPosts(GetAllPostsListener listener) {
-        modelFirebase.getUserPosts(listener);
+    public interface GetUserDetailsListener {
+        void onComplete(User user);
+    }
+    public void getUserDetails(final GetUserDetailsListener listener) {
+        modelFirebase.getUserDetailsAndObserve(getUserId(), new GetUserDetailsListener() {
+            @Override
+            public void onComplete(final User user) {
+                UserAsyncDao.insertUser(user, new UserAsyncDao.InsertUserListener() {
+                    @Override
+                    public void onComplete() {
+                        listener.onComplete(user);
+                    }
+                });
+            }
+        });
     }
 
-    public interface DeletePostListener {
-        void onComplete(boolean success);
+    public void getUserDetails(String userId, final GetUserDetailsListener listener)
+    {
+        modelFirebase.getUserDetails(userId, new GetUserDetailsListener() {
+            @Override
+            public void onComplete(final User user) {
+                UserAsyncDao.insertUser(user, new UserAsyncDao.InsertUserListener() {
+                    @Override
+                    public void onComplete() {
+                        listener.onComplete(user);
+                    }
+                });
+            }
+        });
     }
-    public void deletePost(Post post, DeletePostListener listener) {
-        modelFirebase.deletePost(post, listener);
+
+    public String getUserId() {
+        return modelFirebase.getUserId();
     }
+
+
+    public interface SignInListener {
+        void OnComplete(boolean success);
+    }
+    public void signIn(String email, String password, SignInListener listener)
+    {
+        modelFirebase.signIn(email, password, listener);
+    }
+
+    public boolean signOut()
+    {
+        return modelFirebase.signOut();
+    }
+
+    public boolean isSignedIn() {
+        return modelFirebase.isSignedIn();
+    }
+
+    // Posts
 
     public interface GetAllPostsListener{
         void onComplete(List<Post> data);
@@ -82,12 +133,37 @@ public class Model {
         return data;
     }
 
+    public interface DeletePostListener {
+        void onComplete(boolean success);
+    }
+    public void deletePost(Post post, DeletePostListener listener) {
+        modelFirebase.deletePost(post, listener);
+    }
+
     public interface AddPostListener{
         void onComplete(boolean success);
     }
     public void addPost(Post post, AddPostListener listener) {
         modelFirebase.addPost(post, listener);
     }
+
+    public void getUserPosts(GetAllPostsListener listener) {
+        modelFirebase.getUserPosts(listener);
+    }
+
+    public void removePostsObserver() {
+        modelFirebase.removePostsObserver();
+    }
+
+    public void removeUserPostsObserver() {
+        modelFirebase.removeUserPostsObserver();
+    }
+
+    public void removeUserObserver() {
+        modelFirebase.removeUserObserver();
+    }
+
+    // LastUpdate
 
     public interface GetLastUpdateListener {
         void onComplete(Date lastUpdate);
@@ -102,6 +178,7 @@ public class Model {
         LastUpdateAsyncDao.setLastUpdate(new LastUpdate(tableName, date));
     }
 
+    // Images
 
     public interface SaveImageListener{
         void onComplete(String url);
@@ -109,66 +186,8 @@ public class Model {
     public void saveImage(Bitmap imageBitmap, SaveImageListener listener) {
         modelFirebase.saveImage(imageBitmap, listener);
     }
+
     public void getImage(String url, ImageView imageView) {
         Picasso.get().load(url).into(imageView);
-    }
-
-    public interface CreateUserListener {
-        void onComplete(boolean success);
-    }
-    public void createUser(String email, String password, String name, CreateUserListener listener)
-    {
-        modelFirebase.createUser(email, password, name, listener);
-    }
-
-    public interface SignInListener {
-        void OnComplete(boolean success);
-    }
-
-    public interface GetUserDetailsListener {
-        void onComplete(User user);
-    }
-    public void getUserDetails(final GetUserDetailsListener listener) {
-        modelFirebase.getUserDetailsAndObserve(getUserId(), new GetUserDetailsListener() {
-            @Override
-            public void onComplete(final User user) {
-                UserAsyncDao.insertUser(user, new UserAsyncDao.InsertUserListener() {
-                    @Override
-                    public void onComplete() {
-                        listener.onComplete(user);
-                    }
-                });
-            }
-        });
-    }
-
-    public void getUserDetails(String userId, final GetUserDetailsListener listener)
-    {
-        modelFirebase.getUserDetails(userId, new GetUserDetailsListener() {
-            @Override
-            public void onComplete(final User user) {
-                UserAsyncDao.insertUser(user, new UserAsyncDao.InsertUserListener() {
-                    @Override
-                    public void onComplete() {
-                        listener.onComplete(user);
-                    }
-                });
-            }
-        });
-    }
-
-
-    public void signIn(String email, String password, SignInListener listener)
-    {
-        modelFirebase.signIn(email, password, listener);
-    }
-
-    public boolean signOut()
-    {
-        return modelFirebase.signOut();
-    }
-
-    public boolean isSignedIn() {
-        return modelFirebase.isSignedIn();
     }
 }

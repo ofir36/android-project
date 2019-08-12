@@ -14,4 +14,10 @@ public class FeedViewModel extends ViewModel {
     public LiveData<List<Post>> getData() {
         return data;
     }
+
+    @Override
+    protected void onCleared() {
+        Model.instance.removePostsObserver();
+        super.onCleared();
+    }
 }

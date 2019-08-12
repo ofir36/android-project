@@ -52,4 +52,11 @@ public class ProfileViewModel extends ViewModel {
             }
         });
     }
+
+    @Override
+    protected void onCleared() {
+        Model.instance.removeUserObserver();
+        Model.instance.removeUserPostsObserver();
+        super.onCleared();
+    }
 }

@@ -153,10 +153,21 @@ public class ModelFirebase {
         }
     }
 
-    // TODO: use
     private void removeObservers() {
         userListener.remove();
         postsListener.remove();
+        userPostsListener.remove();
+    }
+
+    public void removePostsObserver() {
+        postsListener.remove();
+    }
+
+    public void removeUserObserver() {
+        userListener.remove();
+    }
+
+    public void removeUserPostsObserver() {
         userPostsListener.remove();
     }
 
